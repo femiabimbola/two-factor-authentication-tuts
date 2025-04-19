@@ -6,3 +6,4 @@ A repo for learning how to build two factor authenticator in application
 - <b>Speakeasy</b> for authenticator
 - Passport local for authentication
 - Mongoose for interating with database
+- Mongodb for the database

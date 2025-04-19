@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+import { connectToMongoose } from "./database/config";
 
 dotenv.config();
 
@@ -11,7 +12,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use(express.json())
+app.use(express.urlencoded())
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
+  await connectToMongoose()
 });
