@@ -1,13 +1,38 @@
-export const register = async() => {}
+import { Request, Response, NextFunction, Router } from "express";
+import bcrypt from "bcrypt";
+import { User } from "../database/schema";
 
-export const login = async() => {}
+export const register = async(req: Request, res: Response) => {
+  try {
+    const { firstName, lastName, email, password } = req.body
 
-export const authStatus = async() => {}
+    if(!firstName ||  !lastName || !email || !password) {
+      return  res.status(400).send({ message: "Enter all the details" });
+    }
 
-export const logout = async() => {}
+    const user = await User.findOne({ email })
+    if(user) return  res.status(400).send({ message: "User exists" });
 
-export const setup2FA = async() => {}
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
-export const verify2FA = async() => {}
+    const newUser = new User({firstName, lastName, email, password: hashedPassword,  })
 
-export const reset2FA = async() => {}
+    const savedUser = await newUser.save()
+    return res.status(200).send({ message: "Enter all the details", data: savedUser });
+
+  } catch (error) {
+    res.status(500).json({error: "error registering user", message:error})
+  }
+}
+
+export const login = async(req: Request, res: Response) => {}
+
+export const authStatus = async(req: Request, res: Response) => {}
+
+export const logout = async(req: Request, res: Response) => {}
+
+export const setup2FA = async(req: Request, res: Response) => {}
+
+export const verify2FA = async(req: Request, res: Response) => {}
+
+export const reset2FA = async(req: Request, res: Response) => {}
