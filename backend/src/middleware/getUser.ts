@@ -2,10 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { User } from "../database/schema";
 import jwt from 'jsonwebtoken';
 
-export const getUser = async (req: Request, res: Response, next: NextFunction) => {
+export const getUser = async (req: Request, res: Response, next: NextFunction) :Promise<any> => {
     const token = req.cookies.token;
+    console.log(token)
     if (!token) {
-        return res.status(401).json({ message: "Please sign in" }); 
+        return res.status(400).json({ message: "Please sign in" }); 
     }
     try {
         const decodedToken: any = jwt.verify(token, process.env.TOKEN_SECRET!);
