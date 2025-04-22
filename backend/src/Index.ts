@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser"
 import { connectToMongoose } from "./database/config";
 import { corsOptions, encodedOptions } from "./utils/options";
 import router from "./routers";
@@ -13,6 +14,7 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json())
 app.use(express.urlencoded(encodedOptions))
+app.use(cookieParser());
 app.use(cors(corsOptions))
 
 app.get("/", (req: Request, res: Response) => {
