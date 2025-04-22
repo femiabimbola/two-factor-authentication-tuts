@@ -59,7 +59,6 @@ export const login = async(req: Request, res: Response):Promise<any> => {
 export const authStatus = async(req: Request, res: Response) :Promise<any> => {
   const token = req.cookies.token
   if(!token) return res.status(200).send({ message: "Please sign in" })
- 
   const decodedToken:any = jwt.verify(token, process.env.TOKEN_SECRET!)
   const user = await User.findOne({ id: decodedToken.id }).select('-password ')
   return res.status(200).send({ message:  user })
@@ -71,7 +70,12 @@ export const logout = async(req: Request, res: Response) => {}
 
 export const setup2FA = async(req: Request, res: Response) => {
   try {
-    const secret = speakeasy.generateSecret();
+    const user = req.user; // Access the user from req
+        if (!user) {
+            return res.status(400).json({ message: "User not available" });
+        }
+
+        const secret = speakeasy.generateSecret();
   } catch (error) {
     res.status(500).json({error: "Cannot setup 2FA", message:error})
   }
