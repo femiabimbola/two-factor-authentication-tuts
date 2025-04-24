@@ -2,6 +2,7 @@ import { Request, Response, NextFunction, Router } from "express";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'
 import speakeasy from "speakeasy"
+import qrCode from "qrcode"
 import { User } from "../database/schema";
 
 export const register = async(req: Request, res: Response):Promise<any> => {
@@ -70,9 +71,20 @@ export const setup2FA = async(req: Request, res: Response) :Promise<any> => {
   try {
     const user = req.user; // Access the user from req
     if (!user) return res.status(400).json({ message: "User not available" });
-    const secret = speakeasy.generateSecret();
-    console.log(secret)
-    res.status(200).json({message: "successfully setup"})
+    const secret = speakeasy.generateSecret()
+   
+    user.userPreferences.twoFactorSecret = secret.base32
+    user.userPreferences.enable2FA = true
+    await user.save()
+    const url = speakeasy.otpauthURL({
+      secret: secret.base32,
+      label: `${user.firstName}`,
+      encoding: "base32",
+      issuer: "Tush App"
+    })
+
+    const imageUrl =  await qrCode.toDataURL(url)
+    res.status(200).json({message: "successfully setup", data:imageUrl})
   } catch (error) {
     res.status(500).json({error: "Cannot setup 2FA", message:error})
   }
