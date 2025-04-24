@@ -97,11 +97,14 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-export const verify2FA = async (req: Request, res: Response) => {
+export const verify2FA = async (req: Request, res: Response): Promise<any> => {
   try {
+
     const user = req.user; // Access the user from req
+    console.log(user)
     if (!user) return res.status(400).json({ message: "User not available" });
-    const { token } = req.body;
+    const { token } = req.body; // this is where there is error
+    
     const verified = speakeasy.totp.verify({
       secret: user.userPreferences.twoFactorSecret,
       token,
@@ -114,7 +117,7 @@ export const verify2FA = async (req: Request, res: Response) => {
     const jwtToken = jwt.sign(
       { email: user.email },
       process.env.TOKEN_SECRET!,
-      { expiresIn: "15m" }
+      { expiresIn: 36000 }
     );
 
     return res.status(200).json({ message: "2fa successuly", data: jwtToken });
