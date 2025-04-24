@@ -47,9 +47,11 @@ export const login = async(req: Request, res: Response):Promise<any> => {
      lastname: user.lastName
      }
   
-    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: '1h' })
+    // const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: '1h' })
+
+    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!)
    
-    res.cookie('token', token, { httpOnly: true });
+    res.cookie('token', token, { httpOnly: true, path: "/", maxAge:50000 });
   
     return res.status(200).send({ message: "User successfully sign in" })
   } catch (error) {
@@ -90,6 +92,19 @@ export const setup2FA = async(req: Request, res: Response) :Promise<any> => {
   }
 }
 
-export const verify2FA = async(req: Request, res: Response) => {}
+export const verify2FA = async(req: Request, res: Response) => {
+  const user = req.user; // Access the user from req
+  if (!user) return res.status(400).json({ message: "User not available" });
+  const {token} = req.body
+  const verified = speakeasy.totp.verify({
+    secret: user.userPreferences.twoFactorSecret,
+    token,
+    encoding:"base32"
+  })
+
+  if(verified) {
+
+  }
+}
 
 export const reset2FA = async(req: Request, res: Response) => {}
