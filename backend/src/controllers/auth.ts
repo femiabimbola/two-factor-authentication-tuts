@@ -74,7 +74,7 @@ export const authStatus = async (req: Request, res: Response): Promise<any> => {
 
 export const logout = async (req: Request, res: Response) => {};
 
-export const setup2FA = async (req: Request, res: Response): Promise<Response> => {
+export const setup2FA = async (req: Request, res: Response): Promise<any> => {
   try {
     const user = req.user; // Access the user from req
     if (!user) return res.status(400).json({ message: "Please sign in" });
@@ -90,7 +90,7 @@ export const setup2FA = async (req: Request, res: Response): Promise<Response> =
     // user.userPreferences.twoFactorSecret = secret.base32;
     // user.userPreferences.enable2FA = true;
    
-    dbUser.markModified("userPreferences");
+    dbUser.markModified("userPreferences");//very importANT
 
     try {
       await dbUser.save();
@@ -153,8 +153,9 @@ export const reset2FA = async (req: Request, res: Response) : Promise<any> => {
     if (!user) return res.status(400).json({ message: "User not available" });
     user.userPreferences.twoFactorSecret = null;
     user.userPreferences.enable2FA = false;
+    user.markModified("userPreferences");
     await user.save();
-    return res.status(200).json({ message: "2FA reset",})
+    return res.status(200).json({ message: "2FA successfully reset",})
   } catch (error) {
     return res.status(500).json({ message: "2fa was not successfully reset" });
   }

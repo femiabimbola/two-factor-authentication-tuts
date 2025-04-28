@@ -16,6 +16,6 @@ router.get("/2fa/setup", getUser, setup2FA)
 
 router.post("/2fa/verify", getUser, verify2FA)
 
-router.post("/2fa/reset", reset2FA)
+router.get("/2fa/reset", getUser, reset2FA)
 
 export default router;
