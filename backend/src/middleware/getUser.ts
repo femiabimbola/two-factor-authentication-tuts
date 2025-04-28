@@ -12,7 +12,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) :
         const decodedToken: any = jwt.verify(token, process.env.TOKEN_SECRET!)
         const user = await User.findOne({ id: decodedToken.id }).select('-password');
         if (!user) {
-            res.clearCookie("token");
+            // res.clearCookie("token");
             return res.status(404).json({ message: "Please sign in" });
         }
         req.user = user; // Attach user to req object

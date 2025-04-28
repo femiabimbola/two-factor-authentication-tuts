@@ -58,7 +58,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 
     const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!);
 
-    res.cookie("token", token, { httpOnly: true, path: "/", maxAge: 50000 });
+    res.cookie("token", token, { httpOnly: true, path: "/", maxAge: 500000 });
 
     return res.status(200).send({ message: "User successfully sign in" });
   } catch (error) {
@@ -74,15 +74,37 @@ export const authStatus = async (req: Request, res: Response): Promise<any> => {
 
 export const logout = async (req: Request, res: Response) => {};
 
-export const setup2FA = async (req: Request, res: Response): Promise<any> => {
+export const setup2FA = async (req: Request, res: Response): Promise<Response> => {
   try {
     const user = req.user; // Access the user from req
-    if (!user) return res.status(400).json({ message: "User not available" });
+    if (!user) return res.status(400).json({ message: "Please sign in" });
     const secret = speakeasy.generateSecret();
 
-    user.userPreferences.twoFactorSecret = secret.base32;
-    user.userPreferences.enable2FA = true;
-    await user.save();
+    const dbUser = await User.findById(user._id)
+
+    if(!dbUser) return res.status(400).json({ message: "User not found" });
+
+    dbUser.userPreferences.twoFactorSecret = secret.base32;
+    dbUser.userPreferences.enable2FA = true;
+
+    // user.userPreferences.twoFactorSecret = secret.base32;
+    // user.userPreferences.enable2FA = true;
+   
+    dbUser.markModified("userPreferences");
+
+    try {
+      await dbUser.save();
+    } catch (saveError:any) {
+      console.error("Error saving user to database:", saveError);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to save 2FA settings",
+        error: saveError.message,
+      });
+    }
+
+    console.log(dbUser)
+
     const url = speakeasy.otpauthURL({
       secret: secret.base32,
       label: `${user.firstName}`,
@@ -91,26 +113,25 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
     });
 
     const imageUrl = await qrCode.toDataURL(url);
-    res.status(200).json({ message: "successfully setup", data: imageUrl });
+    return res.status(200).json({ message: "successfully setup", data: imageUrl });
   } catch (error) {
-    res.status(500).json({ error: "Cannot setup 2FA", message: error });
+   return res.status(500).json({ error: "Cannot setup 2FA", message: error });
   }
 };
 
+
 export const verify2FA = async (req: Request, res: Response): Promise<any> => {
   try {
-
     const user = req.user; // Access the user from req
-    console.log(user)
     if (!user) return res.status(400).json({ message: "User not available" });
-    const { token } = req.body; // this is where there is error
     
+    const { token } = req.body; // this is where there is error
     const verified = speakeasy.totp.verify({
       secret: user.userPreferences.twoFactorSecret,
       token,
       encoding: "base32",
     });
-
+    console.log(verified)
     if (!verified)
       return res.status(500).json({ message: "2fa could not be verified" });
 
@@ -126,4 +147,15 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-export const reset2FA = async (req: Request, res: Response) => {};
+export const reset2FA = async (req: Request, res: Response) : Promise<any> => {
+  try {
+    const user = req.user
+    if (!user) return res.status(400).json({ message: "User not available" });
+    user.userPreferences.twoFactorSecret = null;
+    user.userPreferences.enable2FA = false;
+    await user.save();
+    return res.status(200).json({ message: "2FA reset",})
+  } catch (error) {
+    return res.status(500).json({ message: "2fa was not successfully reset" });
+  }
+};
