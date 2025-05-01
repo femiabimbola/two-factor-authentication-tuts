@@ -103,8 +103,6 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    console.log(dbUser)
-
     const url = speakeasy.otpauthURL({
       secret: secret.base32,
       label: `${user.firstName}`,
@@ -126,10 +124,12 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
     if (!user) return res.status(400).json({ message: "User not available" });
     
     const { token } = req.body; // this is where there is error
+    console.log(token)
+    if(!token) return res.status(400).json({ message: "Token is not available" })
     const verified = speakeasy.totp.verify({
       secret: user.userPreferences.twoFactorSecret,
-      token,
       encoding: "base32",
+      token,
     });
     console.log(verified)
     if (!verified)
