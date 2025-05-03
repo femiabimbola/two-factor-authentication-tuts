@@ -79,6 +79,7 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
     const user = req.user; // Access the user from req
     if (!user) return res.status(400).json({ message: "Please sign in" });
     const secret = speakeasy.generateSecret();
+    console.log(secret.base32)
 
     const dbUser = await User.findById(user._id)
 
@@ -95,7 +96,6 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
     try {
       await dbUser.save();
     } catch (saveError:any) {
-      console.error("Error saving user to database:", saveError);
       return res.status(500).json({
         success: false,
         message: "Failed to save 2FA settings",
@@ -123,17 +123,34 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
     const user = req.user; // Access the user from req
     if (!user) return res.status(400).json({ message: "User not available" });
     
+    const dbUser = await User.findById(user._id);
+    if (!dbUser || !dbUser.userPreferences?.twoFactorSecret) {
+      return res.status(400).json({ success: false, message: "2FA not set up for this user" });
+    }
+
     const { token } = req.body; // this is where there is error
     console.log(token)
     if(!token) return res.status(400).json({ message: "Token is not available" })
+    console.log(dbUser.userPreferences.twoFactorSecret)
+
+    if(!/^\d{6,8}$/.test(token)) {
+      return res.status(400).json({ success: false, message: "Invalid token format" });
+    }
+
     const verified = speakeasy.totp.verify({
-      secret: user.userPreferences.twoFactorSecret,
+      secret: dbUser.userPreferences.twoFactorSecret,
       encoding: "base32",
       token,
+      window: 1,
     });
+
     console.log(verified)
-    if (!verified)
+    if (!verified){
+      console.log("Server time:", new Date().toISOString());
       return res.status(500).json({ message: "2fa could not be verified" });
+    } 
+
+    console.log("here o")
 
     const jwtToken = jwt.sign(
       { email: user.email },
