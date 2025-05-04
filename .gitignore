@@ -1,3 +1,32 @@
 backend/node_modules
 backend/package-lock.json
 backend/.env
+
+
+frontend/node_modules
+frontend/next-env.d.ts
+frontend/package-lock.json
+
+# next.js
+frontend/.next/
+frontend/out/
+
+# production
+frontend/build
+
+# misc
+.DS_Store
+*.pem
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+
+# testing
+/coverage

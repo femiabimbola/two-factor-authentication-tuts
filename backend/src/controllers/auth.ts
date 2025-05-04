@@ -131,11 +131,12 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
     const { token } = req.body; // this is where there is error
     console.log(token)
     if(!token) return res.status(400).json({ message: "Token is not available" })
-    console.log(dbUser.userPreferences.twoFactorSecret)
+    
 
     if(!/^\d{6,8}$/.test(token)) {
       return res.status(400).json({ success: false, message: "Invalid token format" });
     }
+
 
     const verified = speakeasy.totp.verify({
       secret: dbUser.userPreferences.twoFactorSecret,
@@ -144,13 +145,12 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
       window: 1,
     });
 
-    console.log(verified)
+  
     if (!verified){
       console.log("Server time:", new Date().toISOString());
       return res.status(500).json({ message: "2fa could not be verified" });
     } 
 
-    console.log("here o")
 
     const jwtToken = jwt.sign(
       { email: user.email },
