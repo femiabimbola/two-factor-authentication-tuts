@@ -8,6 +8,8 @@ router.post("/auth/register", register)
 
 router.post("/auth/login", login)
 
+router.get("/auth/logout", logout)
+
 router.get("/auth/status", getUser, authStatus)
 
 router.post("/auth/status", logout)

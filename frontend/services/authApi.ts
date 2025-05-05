@@ -16,6 +16,10 @@ export const register = async ({lastName, password, firstName, email}: registerP
   return await api.post("/auth/register", {lastName, password, firstName, email})
 }
 
-export const login = async ({ password, email}: registerProps) => {
+export const login = async ({ password, email}: loginProps) => {
   return await api.post("/auth/login", { password, email}, {withCredentials:true})
+}
+
+export const authStatus = async () => {
+  return await api.get("/auth/status", {withCredentials:true})
 }

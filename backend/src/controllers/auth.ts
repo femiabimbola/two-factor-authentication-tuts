@@ -55,7 +55,6 @@ export const login = async (req: Request, res: Response): Promise<any> => {
     };
 
     // const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: '1h' })
-
     const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!);
 
     res.cookie("token", token, { httpOnly: true, path: "/", maxAge: 500000 });
@@ -72,7 +71,16 @@ export const authStatus = async (req: Request, res: Response): Promise<any> => {
   res.status(200).json({ message: "user found", data: user });
 };
 
-export const logout = async (req: Request, res: Response) => {};
+export const logout = async (req: Request, res: Response) : Promise<any> => {
+  try {
+    // Clear the token cookie
+    res.clearCookie('token', { httpOnly: true, path: '/' });
+
+    return res.status(200).send({ message: 'User successfully logged out' });
+  } catch (error) {
+    res.status(500).json({ error: 'log out the user', message: error });
+  }
+};
 
 export const setup2FA = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -87,9 +95,6 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
 
     dbUser.userPreferences.twoFactorSecret = secret.base32;
     dbUser.userPreferences.enable2FA = true;
-
-    // user.userPreferences.twoFactorSecret = secret.base32;
-    // user.userPreferences.enable2FA = true;
    
     dbUser.markModified("userPreferences");//very importANT
 
