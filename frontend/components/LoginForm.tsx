@@ -34,7 +34,10 @@ export const LoginForm = () => {
 
   return (
     <div className="flex justify-center items-center h-full">
-      <CardWrapper>
+      <CardWrapper
+        label="Don't have an account? Register"
+        Opplink="/register"
+      >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className=" flex flex-col gap-y-5">
