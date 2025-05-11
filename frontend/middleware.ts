@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 
 // Define public routes using regex patterns
-const publicRoutes = ['/login(.*)', '/sign-up(.*)', '/'];
+const publicRoutes = ['/login(.*)', '/register(.*)', '/'];
 
 // Middleware function
 export async function middleware(request: NextRequest) {
