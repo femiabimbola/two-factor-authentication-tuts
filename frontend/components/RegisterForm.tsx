@@ -14,22 +14,31 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import CardWrapper from "@/components/CardWrapper";
+import {useState, useTransition} from "react";
 
 const RegisterSchema = z.object({
   email: z
     .string({ invalid_type_error: "Must be a string" })
     .email({ message: "Valid email is required" }),
   password: z.string().min(1, { message: "Password is required" }),
+  firstName: z.string().min(1, {message: "first name is required"}),
 });
 
 export const RegisterForm = () => {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { firstName: "", email: "", password: "" },
   });
 
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     console.log(values)
+    setError("");
+    setSuccess("");
+    startTransition(() => {})
   };
 
   return (
@@ -42,6 +51,23 @@ export const RegisterForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className=" flex flex-col gap-y-5">
               <h1 className="text-2xl font-bold tracking-tight text-gray-900 text-center"> Register Form</h1>
+              <FormField
+              control={form.control}
+              name="firstName"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder="Enter your name"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
               <FormField
                   control={form.control}
                   name="email"
@@ -76,7 +102,7 @@ export const RegisterForm = () => {
                     </FormItem>
                   )}
                 />
-               <Button type="submit">Submit</Button>
+               <Button disabled={isPending} type="submit">Submit</Button>
             </div>
           </form>
         </Form>

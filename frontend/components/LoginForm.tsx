@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {useState, useTransition} from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import CardWrapper from "@/components/CardWrapper";
+import Link from "next/link";
 
 const LoginSchema = z.object({
   email: z
@@ -23,6 +25,10 @@ const LoginSchema = z.object({
 });
 
 export const LoginForm = () => {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+  
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: { email: "", password: "" },
@@ -30,6 +36,15 @@ export const LoginForm = () => {
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     console.log(values)
+    setError("");
+    setSuccess("");
+    startTransition(() => {
+      try {
+        
+      } catch (error) {
+        
+      }
+    })
   };
 
   return (
