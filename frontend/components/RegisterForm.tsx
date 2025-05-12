@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import CardWrapper from "@/components/CardWrapper";
 import {useState, useTransition} from "react";
+import { register } from "@/services/authApi";
+import { FormSuccess, FormError } from "@/components/FormMessage";
 
 const RegisterSchema = z.object({
   email: z
@@ -22,6 +24,7 @@ const RegisterSchema = z.object({
     .email({ message: "Valid email is required" }),
   password: z.string().min(1, { message: "Password is required" }),
   firstName: z.string().min(1, {message: "first name is required"}),
+  lastName:z.string().min(1, {message: "last name name is required"})
 });
 
 export const RegisterForm = () => {
@@ -31,14 +34,21 @@ export const RegisterForm = () => {
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
-    defaultValues: { firstName: "", email: "", password: "" },
+    defaultValues: { firstName: "",  lastName: "", email: "", password: "" },
   });
 
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    console.log(values)
     setError("");
     setSuccess("");
-    startTransition(() => {})
+    startTransition(async() => {
+      try {
+        const {data} = await register(values)
+        console.log(data)
+      } catch (error: any) {
+        setError("Something went wrong during registration")
+        console.log("The error is :", error.message)
+      }
+    })
   };
 
   return (
@@ -62,6 +72,23 @@ export const RegisterForm = () => {
                       {...field}
                       disabled={isPending}
                       placeholder="Enter your name"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder="Enter your Last name"
                     />
                   </FormControl>
                   <FormMessage />
@@ -102,6 +129,8 @@ export const RegisterForm = () => {
                     </FormItem>
                   )}
                 />
+                <FormError message={error} />
+                <FormSuccess message={success} />
                <Button disabled={isPending} type="submit">Submit</Button>
             </div>
           </form>

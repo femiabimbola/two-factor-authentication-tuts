@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import CardWrapper from "@/components/CardWrapper";
 import Link from "next/link";
+import { login, register } from "@/services/authApi";
 
 const LoginSchema = z.object({
   email: z
@@ -38,11 +39,11 @@ export const LoginForm = () => {
     console.log(values)
     setError("");
     setSuccess("");
-    startTransition(() => {
+    startTransition( async() => {
       try {
-        
+        const {data} = await login(values)
       } catch (error) {
-        
+        setError("Something went wrong during loggin ")
       }
     })
   };
