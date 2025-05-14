@@ -16,7 +16,9 @@ import { Input } from "@/components/ui/input";
 import CardWrapper from "@/components/CardWrapper";
 import {useState, useTransition} from "react";
 import { register } from "@/services/authApi";
+import {useRouter} from "next/navigation";
 import { FormSuccess, FormError } from "@/components/FormMessage";
+import axios from "axios";
 
 const RegisterSchema = z.object({
   email: z
@@ -31,6 +33,8 @@ export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+ 
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -42,7 +46,11 @@ export const RegisterForm = () => {
     setSuccess("");
     startTransition(async() => {
       try {
-        const {data} = await register(values)
+        
+        // const {data} = await register(values)
+        const {data} = await axios.post("http://localhost:7000/api/auth/register", values)
+        setSuccess(data.message);
+       router.push('http://localhost:3000/login')
         console.log(data)
       } catch (error: any) {
         setError("Something went wrong during registration")

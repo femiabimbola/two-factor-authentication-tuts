@@ -1,6 +1,6 @@
 export const corsOptions = {
-  origin : ['*'],
-  credential: true //Majorly because of cookies
+  origin : ['*', "http://localhost:3000/"],
+  credentials: true //Majorly because of cookies
 }
 
 export const encodedOptions = {
