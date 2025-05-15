@@ -48,6 +48,8 @@ export const RegisterForm = () => {
       try {
         
         // const {data} = await register(values)
+        // ${process.env.EXPRESS_API_URL}
+        console.log(`${process.env.BACKEND_URL}`)
         const {data} = await axios.post("http://localhost:7000/api/auth/register", values)
         // const {data} =  await axios.post(`${process.env.BACKEND_URL}/api/auth/register`, values)
         setSuccess(data.message);

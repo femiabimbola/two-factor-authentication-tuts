@@ -19,6 +19,7 @@ import axios from "axios";
 import Link from "next/link";
 import { login, register } from "@/services/authApi";
 import { FormError, FormSuccess } from "./FormMessage";
+import { useRouter } from "next/navigation";
 
 const LoginSchema = z.object({
   email: z
@@ -31,6 +32,7 @@ export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -43,9 +45,9 @@ export const LoginForm = () => {
     setSuccess("");
     startTransition( async() => {
       try {
-        console.log(values)
         const {data} = await axios.post("http://localhost:7000/api/auth/login", values)
         setSuccess(data.message);
+        router.push('http://localhost:3000/setup2fa')
       } catch (error:any) {
         setError(error.response.data.message)
       }
