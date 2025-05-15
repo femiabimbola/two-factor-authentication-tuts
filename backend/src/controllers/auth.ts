@@ -9,7 +9,6 @@ export const register = async (req: Request, res: Response): Promise<any> => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    console.log(email)
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).send({ message: "Enter all the details" });
     }

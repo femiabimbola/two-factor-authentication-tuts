@@ -49,12 +49,11 @@ export const RegisterForm = () => {
         
         // const {data} = await register(values)
         const {data} = await axios.post("http://localhost:7000/api/auth/register", values)
+        // const {data} =  await axios.post(`${process.env.BACKEND_URL}/api/auth/register`, values)
         setSuccess(data.message);
        router.push('http://localhost:3000/login')
-        console.log(data)
       } catch (error: any) {
-        setError("Something went wrong during registration")
-        console.log("The error is :", error.message)
+        setError(error.response.data.message)
       }
     })
   };
@@ -139,7 +138,7 @@ export const RegisterForm = () => {
                 />
                 <FormError message={error} />
                 <FormSuccess message={success} />
-               <Button disabled={isPending} type="submit">Submit</Button>
+               <Button disabled={isPending} type="submit" className="cursor-pointer">Submit</Button>
             </div>
           </form>
         </Form>

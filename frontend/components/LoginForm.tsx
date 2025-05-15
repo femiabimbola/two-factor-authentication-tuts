@@ -15,8 +15,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import CardWrapper from "@/components/CardWrapper";
+import axios from "axios";
 import Link from "next/link";
 import { login, register } from "@/services/authApi";
+import { FormError, FormSuccess } from "./FormMessage";
 
 const LoginSchema = z.object({
   email: z
@@ -41,11 +43,14 @@ export const LoginForm = () => {
     setSuccess("");
     startTransition( async() => {
       try {
-        const {data} = await login(values)
-      } catch (error) {
-        setError("Something went wrong during loggin ")
+        console.log(values)
+        const {data} = await axios.post("http://localhost:7000/api/auth/login", values)
+        setSuccess(data.message);
+      } catch (error:any) {
+        setError(error.response.data.message)
       }
-    })
+    }
+    )
   };
 
   return (
@@ -92,7 +97,9 @@ export const LoginForm = () => {
                     </FormItem>
                   )}
                 />
-               <Button type="submit">Submit</Button>
+                  <FormError message={error} />
+                 <FormSuccess message={success} />
+               <Button type="submit" className="cursor-pointer">Submit</Button>
             </div>
           </form>
         </Form>
