@@ -45,7 +45,7 @@ export const LoginForm = () => {
     setSuccess("");
     startTransition( async() => {
       try {
-        const {data} = await axios.post("http://localhost:7000/api/auth/login", values)
+        const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, values, {withCredentials:true})
         setSuccess(data.message);
         router.push('http://localhost:3000/setup2fa')
       } catch (error:any) {
