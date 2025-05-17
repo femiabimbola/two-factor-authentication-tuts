@@ -29,6 +29,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // if (sessionToken) {
+  //   const dashboard= new URL('/setup2fa', request.url);
+  //   return NextResponse.redirect(dashboard);
+  // }
+
  
   // Verify session with Express backend
   // try {
