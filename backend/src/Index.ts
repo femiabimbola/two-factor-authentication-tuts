@@ -11,15 +11,12 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
+app.use(cors(corsOptions))
 
 app.use(express.json())
 app.use(express.urlencoded(encodedOptions))
 app.use(cookieParser());
-app.use(cors({
-  origin : ['*', "http://localhost:3000/"],
-  credentials: true, //Majorly because of cookies
-  allowedHeaders: ['Content-Type', 'Authorization',]
-}))
+
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("Express with TypeScript Server");
