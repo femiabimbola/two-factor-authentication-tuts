@@ -20,8 +20,8 @@ export async function middleware(request: NextRequest) {
 
   // Check for authentication (e.g., session cookie or token)
   // const sessionToken = request.cookies.get('session_token')?.value;
-    const sessionToken = request.cookies.get('__session')?.value
-    // console.log(sessionToken)
+    const sessionToken = request.cookies.get('token')?.value
+    console.log(sessionToken)
 
   // If no session token, redirect to login page
   if (!sessionToken) {
@@ -31,30 +31,30 @@ export async function middleware(request: NextRequest) {
 
  
   // Verify session with Express backend
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-      },
-    });
+  // try {
+  //   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify`, {
+  //     method: 'GET',
+  //     headers: {
+  //       Authorization: `Bearer ${sessionToken}`,
+  //     },
+  //   });
 
-    if (!response.ok) {
-      // Invalid session, clear cookie and redirect to login
-      const loginUrl = new URL('/login', request.url);
-      const res = NextResponse.redirect(loginUrl);
-      res.cookies.delete('__session');
-      return res;
-    }
+  //   if (!response.ok) {
+  //     // Invalid session, clear cookie and redirect to login
+  //     const loginUrl = new URL('/login', request.url);
+  //     const res = NextResponse.redirect(loginUrl);
+  //     res.cookies.delete('token');
+  //     return res;
+  //   }
 
-    // Session is valid, allow access
-    return NextResponse.next();
-  } catch (error) {
-    // Handle errors (e.g., backend unreachable)
-    console.error('Middleware auth check failed:', error);
-    const loginUrl = new URL('/login', request.url);
-    return NextResponse.redirect(loginUrl);
-  }
+  //   // Session is valid, allow access
+  //   return NextResponse.next();
+  // } catch (error) {
+  //   // Handle errors (e.g., backend unreachable)
+  //   console.error('Middleware auth check failed:', error);
+  //   const loginUrl = new URL('/login', request.url);
+  //   return NextResponse.redirect(loginUrl);
+  // }
 }
 
 // Middleware configuration

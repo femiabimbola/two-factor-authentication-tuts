@@ -58,6 +58,8 @@ export const login = async (req: Request, res: Response): Promise<any> => {
     const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!);
 
     res.cookie("token", token, { httpOnly: true, path: "/", maxAge: 500000 });
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
 
     return res.status(200).send({ message: "User successfully sign in" });
   } catch (error) {
