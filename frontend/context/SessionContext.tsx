@@ -9,7 +9,13 @@ interface SessionContextType {
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
-export const useSession = () => useContext(SessionContext)
+export const useSession = () => {
+  const context = useContext(SessionContext);
+  if (context === undefined) {
+    throw new Error('useSession must be used within a SessionProvider');
+  }
+  return context;
+}
 
 export const SessionProvider  = ({children}: { children: React.ReactNode}) =>  {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

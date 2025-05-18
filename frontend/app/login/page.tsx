@@ -3,10 +3,16 @@ import { useSession } from "@/context/SessionContext"
 
 
 const Login = () => {
-// const {login} = useSession()
-const handleLoginSuccess = () => {}
+const {login} = useSession()
+
+const handleLoginSuccess = (userdata: any) => {
+  console.log(userdata)
+  login(userdata)
+}
+
+
   return (
-   <LoginForm />
+   <LoginForm onLoginSuccess={handleLoginSuccess}/>
   )
 }
 
