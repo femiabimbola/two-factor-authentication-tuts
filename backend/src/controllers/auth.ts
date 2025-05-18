@@ -47,21 +47,31 @@ export const login = async (req: Request, res: Response): Promise<any> => {
     if (!validPassword)
       return res.status(400).send({ message: "Password does not match" });
 
+    // Create the payload for the JWT token
     const tokenData = {
-      id: user.id,
+      id: user._id,
       email: user.email,
       firstname: user.firstName,
       lastname: user.lastName,
     };
+    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: '15m' });
 
-    // const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: '1h' })
-    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!);
-
-    res.cookie("token", token, { httpOnly: true, path: "/", maxAge: 1000000 });
+    res.cookie("token", token, { httpOnly: true, path: "/", maxAge: 1000 * 60 * 15 });
     // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     // res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-    return res.status(200).send({ message: "User successfully sign in" });
+    const userWithoutPassword = {
+      _id: user._id, // Or user.id if you prefer
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      isEmailVerified: user.isEmailVerified, // Added
+      userPreferences: user.userPreferences, // Added
+      role: user.role,                       // Added
+      createdAt: user.createdAt,
+    };
+
+    return res.status(200).send({ message: "User successfully sign in", data:userWithoutPassword });
   } catch (error) {
     res.status(500).json({ error: "log in the user", message: error });
   }
