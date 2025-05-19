@@ -13,10 +13,13 @@ const Login = () => {
     console.log(" This is the user data", userdata);
     login(userdata);
 
+    console.log(userdata.data.userPreferences.twoFactorSecret)
     if (userdata.data.userPreferences.twoFactorSecret === null) {
       router.push("/setup2fa");
+    }else {
+      router.push("/verify2fa");
     }
-    router.push("/verify2fa");
+    
   };
 
   return <LoginForm onLoginSuccess={handleLoginSuccess} />;

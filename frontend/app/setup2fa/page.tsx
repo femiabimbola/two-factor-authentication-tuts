@@ -1,6 +1,8 @@
- const Setup2Fa = () => {
+import { TwoFASetup } from "@/components/TwoFASetup"
+
+const Setup2Fa = () => {
   return (
-    <div>Setup 2FA</div>
+    <TwoFASetup />
   )
 }
 
