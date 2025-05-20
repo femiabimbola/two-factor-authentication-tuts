@@ -6,7 +6,7 @@ import Link from "next/link";
 interface CardWrapperProps {
   children: React.ReactNode;
   Opplink: string;
-  label:string;
+  label?:string;
   ForgotPasswordLink?: string;
   ForgotPassword?: string
 }

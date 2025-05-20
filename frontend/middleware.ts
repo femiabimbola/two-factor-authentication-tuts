@@ -19,9 +19,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check for authentication (e.g., session cookie or token)
-  // const sessionToken = request.cookies.get('session_token')?.value;
     const sessionToken = request.cookies.get('token')?.value
-    console.log(sessionToken)
+    // console.log(sessionToken)
 
   // If no session token, redirect to login page
   if (!sessionToken) {
@@ -29,8 +28,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Just redirecting everyone content ther
   // if (sessionToken) {
-  //   const dashboard= new URL('/setup2fa', request.url);
+  //   const dashboard= new URL('/', request.url);
   //   return NextResponse.redirect(dashboard);
   // }
 
