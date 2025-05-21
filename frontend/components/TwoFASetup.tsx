@@ -15,21 +15,33 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Button } from "./ui/button";
+import { useState } from "react";
 
-export const TwoFASetup = ({onLoginSuccess}: any) => {
-  const LoginSchema = z.object({
+export const TwoFASetup = ({onSetupComplete}: any) => {
+
+  const TwoFASchema = z.object({
     input: z.string({ invalid_type_error: "Must be a string" }),
     QR: z.string({ invalid_type_error: "Must be a string" }),
   });
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof TwoFASchema>>({
+    resolver: zodResolver(TwoFASchema),
     defaultValues: { input: "", QR: "" },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {};
+  const onSubmit = (values: z.infer<typeof TwoFASchema>) => {
+    onSetupComplete()
+  };
 
-  //The Input field has to have his own function
+  const [message, setMessage] = useState('')
+  const copyClickBoard = async() => {
+    await navigator.clipboard.writeText(message) //To findout what this function does
+    setMessage("Secret copied to clipboard")
+
+  }
+
+  //The Input field has to have his own function which {copyClickBoard}
+  // submit button is {onSetupComplete}
 
   return (
     <div className="flex justify-center items-center h-full">
@@ -61,6 +73,7 @@ export const TwoFASetup = ({onLoginSuccess}: any) => {
                         {...field}
                         placeholder="Enter the QR code"
                         type="text"
+                        onClick={copyClickBoard}
                       />
                     </FormControl>
                   </FormItem>
