@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export const TwoFASetup = ({onSetupComplete}: any) => {
@@ -38,11 +38,18 @@ export const TwoFASetup = ({onSetupComplete}: any) => {
   const [response, setResponse] = useState({})
 
   const fetchQRcode = async () => {
-    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`)
+    console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`)
+    const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`, {withCredentials:true})
+    console.log(data)
+    setResponse(data)
   }
 
+  useEffect(() => {
+    fetchQRcode()
+  }, []) //It only runs once
+
   const copyClickBoard = async() => {
-    await navigator.clipboard.writeText(message) //To findout what this function does
+    // await navigator.clipboard.writeText(response.secret) //To findout what this function does
     setMessage("Secret copied to clipboard")
     console.log(message)
 
@@ -60,12 +67,13 @@ export const TwoFASetup = ({onSetupComplete}: any) => {
               <h1 className="text-xl font-bold tracking-tight text-gray-900 text-center">
                 Activate Two Factor Authentication
               </h1>
+              {/* <Image src={response.data} alt="2FA QR Code" /> */}
               <FormField
                 control={form.control}
                 name="QR"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Scan the authenti cator Application</FormLabel>
+                    <FormLabel>Scan the authenticator Application</FormLabel>
                     <FormControl>{/* <Image /> */}</FormControl>
                   </FormItem>
                 )}
