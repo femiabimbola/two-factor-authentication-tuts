@@ -16,6 +16,7 @@ import {
 } from "./ui/form";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import axios from "axios";
 
 export const TwoFASetup = ({onSetupComplete}: any) => {
 
@@ -34,9 +35,16 @@ export const TwoFASetup = ({onSetupComplete}: any) => {
   };
 
   const [message, setMessage] = useState('')
+  const [response, setResponse] = useState({})
+
+  const fetchQRcode = async () => {
+    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`)
+  }
+
   const copyClickBoard = async() => {
     await navigator.clipboard.writeText(message) //To findout what this function does
     setMessage("Secret copied to clipboard")
+    console.log(message)
 
   }
 
@@ -57,11 +65,12 @@ export const TwoFASetup = ({onSetupComplete}: any) => {
                 name="QR"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Scan the authenticator Application</FormLabel>
+                    <FormLabel>Scan the authenti cator Application</FormLabel>
                     <FormControl>{/* <Image /> */}</FormControl>
                   </FormItem>
                 )}
               />
+              {message && <p>{message}</p>}
               <FormField
                 control={form.control}
                 name="input"

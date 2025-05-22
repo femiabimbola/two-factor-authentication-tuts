@@ -1,3 +1,5 @@
+"use client"
+
 import { TwoFASetup } from "@/components/TwoFASetup";
 import { useRouter } from "next/navigation";
 
