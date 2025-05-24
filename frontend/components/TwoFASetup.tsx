@@ -35,13 +35,13 @@ export const TwoFASetup = ({onSetupComplete}: any) => {
   };
 
   const [message, setMessage] = useState('')
-  const [response, setResponse] = useState({})
+  const [response, setResponse] = useState("")
 
   const fetchQRcode = async () => {
     console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`)
     const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`, {withCredentials:true})
-    console.log(data)
-    setResponse(data)
+    console.log(data.data)
+    setResponse(data.data)
   }
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export const TwoFASetup = ({onSetupComplete}: any) => {
               <h1 className="text-xl font-bold tracking-tight text-gray-900 text-center">
                 Activate Two Factor Authentication
               </h1>
-              {/* <Image src={response.data} alt="2FA QR Code" /> */}
+              { response && <Image src={response} alt="2FA QR Code" width={80} height={80}/>}
               <FormField
                 control={form.control}
                 name="QR"
