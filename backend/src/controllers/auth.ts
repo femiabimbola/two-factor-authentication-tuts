@@ -99,7 +99,7 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
     const user = req.user; // Access the user from req
     if (!user) return res.status(400).json({ message: "Please sign in" });
     const secret = speakeasy.generateSecret();
-    console.log(secret.base32)
+    // console.log(secret.base32)
 
     const dbUser = await User.findById(user._id)
 
@@ -146,7 +146,6 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
     }
 
     const { token } = req.body; // this is where there is error
-    console.log(token)
     if(!token) return res.status(400).json({ message: "Token is not available" })
     
 

@@ -18,8 +18,7 @@ import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export const TwoFASetup = ({onSetupComplete}: any) => {
-
+export const TwoFASetup = ({ onSetupComplete }: any) => {
   const TwoFASchema = z.object({
     input: z.string({ invalid_type_error: "Must be a string" }),
     QR: z.string({ invalid_type_error: "Must be a string" }),
@@ -31,29 +30,31 @@ export const TwoFASetup = ({onSetupComplete}: any) => {
   });
 
   const onSubmit = (values: z.infer<typeof TwoFASchema>) => {
-    onSetupComplete()
+    onSetupComplete();
   };
 
-  const [message, setMessage] = useState('')
-  const [response, setResponse] = useState("")
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
 
   const fetchQRcode = async () => {
-    console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`)
-    const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`, {withCredentials:true})
-    console.log(data.data)
-    setResponse(data.data)
-  }
+    console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`);
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`,
+      { withCredentials: true }
+    );
+    console.log(data.data);
+    setResponse(data.data);
+  };
 
   useEffect(() => {
-    fetchQRcode()
-  }, []) //It only runs once
+    fetchQRcode();
+  }, []); //It only runs once
 
-  const copyClickBoard = async() => {
+  const copyClickBoard = async () => {
     // await navigator.clipboard.writeText(response.secret) //To findout what this function does
-    setMessage("Secret copied to clipboard")
-    console.log(message)
-
-  }
+    setMessage("Secret copied to clipboard");
+    console.log(message);
+  };
 
   //The Input field has to have his own function which {copyClickBoard}
   // submit button is {onSetupComplete}
@@ -64,27 +65,27 @@ export const TwoFASetup = ({onSetupComplete}: any) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className=" flex flex-col gap-y-5">
-              <h1 className="text-xl font-bold tracking-tight text-gray-900 text-center">
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900 text-center">
                 Activate Two Factor Authentication
               </h1>
-              { response && <Image src={response} alt="2FA QR Code" width={80} height={80}/>}
-              <FormField
-                control={form.control}
-                name="QR"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Scan the authenticator Application</FormLabel>
-                    <FormControl>{/* <Image /> */}</FormControl>
-                  </FormItem>
+              <div className="mx-auto">
+                {response && <h3> Scan with your authenticator application </h3>}
+                {response && (
+                  <Image
+                    src={response}
+                    alt="2FA QR Code"
+                    width={240} height={240}
+                    className="mx-auto"
+                  />
                 )}
-              />
+              </div>
               {message && <p>{message}</p>}
               <FormField
                 control={form.control}
                 name="input"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Or Input the QR code manually</FormLabel>
+                    <FormLabel>Enter the QR code</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
