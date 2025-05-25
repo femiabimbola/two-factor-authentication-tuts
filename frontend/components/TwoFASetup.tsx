@@ -19,14 +19,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export const TwoFASetup = ({ onSetupComplete }: any) => {
+
   const TwoFASchema = z.object({
     input: z.string({ invalid_type_error: "Must be a string" }),
-    QR: z.string({ invalid_type_error: "Must be a string" }),
   });
 
   const form = useForm<z.infer<typeof TwoFASchema>>({
     resolver: zodResolver(TwoFASchema),
-    defaultValues: { input: "", QR: "" },
+    defaultValues: { input: "", },
   });
 
   const onSubmit = (values: z.infer<typeof TwoFASchema>) => {
@@ -37,12 +37,11 @@ export const TwoFASetup = ({ onSetupComplete }: any) => {
   const [response, setResponse] = useState("");
 
   const fetchQRcode = async () => {
-    console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`);
     const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`,
       { withCredentials: true }
     );
-    console.log(data.data);
+    // console.log(data.data);
     setResponse(data.data);
   };
 
@@ -79,7 +78,7 @@ export const TwoFASetup = ({ onSetupComplete }: any) => {
                   />
                 )}
               </div>
-              {message && <p>{message}</p>}
+              {message && <p className="text-gray-900">{message}</p>}
               <FormField
                 control={form.control}
                 name="input"
