@@ -7,10 +7,12 @@ interface SessionContextType {
   user: any | null;
   login: (userData: any) => void;
   logout: () => void;
+  loading: boolean
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
+// This is used in the middleware
 export const useSession = () => {
   const context = useContext(SessionContext);
   if (context === undefined) {
@@ -21,9 +23,9 @@ export const useSession = () => {
 
   
 export const SessionProvider  = ({children}: { children: React.ReactNode}) =>  {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState< null | string >('');
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // @ts-ignore
@@ -33,6 +35,7 @@ export const SessionProvider  = ({children}: { children: React.ReactNode}) =>  {
       setUser(storedUser)
       setIsLoggedIn(true)
     }
+    setLoading(false)
   },[])
 
   const login = (userData: any) => {
@@ -48,10 +51,9 @@ export const SessionProvider  = ({children}: { children: React.ReactNode}) =>  {
   }
 
   return (
-    <SessionContext.Provider value={{ isLoggedIn, user, login, logout }}>
+    <SessionContext.Provider value={{ isLoggedIn, user, login, logout , loading,}}>
     {children}
   </SessionContext.Provider>
   )
   
-
 };
