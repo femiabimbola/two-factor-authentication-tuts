@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 const Verify2Fa = () => {
   const router = useRouter();
 
-  const handleOnVerifyComplete = () => {
-    router.push("/verify2fa");
+  const handleOnVerifyComplete = (data: any) => {
+   if(data) router.push("/");
   };
 
   const handle2faReset = () => {
-    
+
   }
 
   return (

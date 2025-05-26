@@ -106,9 +106,8 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
     if(!dbUser) return res.status(400).json({ message: "User not found" });
 
     dbUser.userPreferences.twoFactorSecret = secret.base32;
-    dbUser.userPreferences.enable2FA = true;
-   
-    dbUser.markModified("userPreferences");//very importANT
+
+    dbUser.markModified("userPreferences");
 
     try {
       await dbUser.save();
@@ -163,7 +162,7 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
 
   
     if (!verified){
-      console.log("Server time:", new Date().toISOString());
+      // console.log("Server time:", new Date().toISOString());
       return res.status(500).json({ message: "2fa could not be verified" });
     } 
 
@@ -173,6 +172,11 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
       process.env.TOKEN_SECRET!,
       { expiresIn: 36000 }
     );
+
+    
+    dbUser.userPreferences.enable2FA = true;
+   
+    dbUser.markModified("userPreferences");//very importANT
 
     return res.status(200).json({ message: "2fa successuly", data: jwtToken });
   } catch (error) {
