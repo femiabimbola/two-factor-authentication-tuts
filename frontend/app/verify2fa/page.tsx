@@ -1,3 +1,5 @@
+"use client"
+
 import { TwoFAVerify } from "@/components/TwoFAVerify";
 import { useRouter } from "next/navigation";
 
