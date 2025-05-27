@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export const TwoFASetup = ({ onSetupComplete }: any) => {
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
 
   const TwoFASchema = z.object({
     input: z.string({ invalid_type_error: "Must be a string" }),
@@ -33,15 +35,11 @@ export const TwoFASetup = ({ onSetupComplete }: any) => {
     onSetupComplete();
   };
 
-  const [message, setMessage] = useState("");
-  const [response, setResponse] = useState("");
-
   const fetchQRcode = async () => {
     const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`,
       { withCredentials: true }
     );
-    // console.log(data.data);
     setResponse(data.data);
   };
 
@@ -64,7 +62,7 @@ export const TwoFASetup = ({ onSetupComplete }: any) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className=" flex flex-col gap-y-5">
-              <h1 className="text-2xl font-bold tracking-tight text-gray-900 text-center">
+              <h1 className="text-xl font-bold tracking-tight text-gray-900 text-center">
                 Activate Two Factor Authentication
               </h1>
               <div className="mx-auto">
@@ -79,7 +77,7 @@ export const TwoFASetup = ({ onSetupComplete }: any) => {
                 )}
               </div>
               {message && <p className="text-gray-900">{message}</p>}
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="input"
                 render={({ field }) => (
@@ -95,7 +93,7 @@ export const TwoFASetup = ({ onSetupComplete }: any) => {
                     </FormControl>
                   </FormItem>
                 )}
-              />
+              /> */}
               <Button type="submit" className="cursor-pointer">
                 Continue to Verification
               </Button>

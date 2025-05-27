@@ -56,35 +56,18 @@ export const TwoFAVerify = ({ onVerifySuccess, onResetSuccess }: any) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className=" flex flex-col gap-y-5">
-              <h1 className="text-2xl font-bold tracking-tight text-gray-900 text-center"> Login Form</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900 text-center"> Verify TOTP</h1>
               <FormField
                   control={form.control}
                   name="email"
                   render={({field}) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>TOTP</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="Enter your email"
-                          type="email"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({field}) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Enter your email"
-                          type="password"
+                          placeholder="Enter your TOTP"
+                          type="number"
                         />
                       </FormControl>
                       <FormMessage />

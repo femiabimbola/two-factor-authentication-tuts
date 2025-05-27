@@ -1,5 +1,4 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { useSession } from './context/SessionContext';
 
 // Define public routes using regex patterns
 const publicRoutes = ['/login(.*)', '/register(.*)', '/'];
@@ -18,9 +17,6 @@ export async function middleware(request: NextRequest) {
   if (isPublicRoute) {
     return NextResponse.next();
   }
-
-  const { isLoggedIn, loading} = useSession()
-  console.log(isLoggedIn)
 
   // Check for authentication (e.g., session cookie or token)
     const sessionToken = request.cookies.get('token')?.value
