@@ -5,7 +5,7 @@ import Link from "next/link";
 
 interface CardWrapperProps {
   children: React.ReactNode;
-  Opplink: string;
+  Opplink?: string;
   label?:string;
   ForgotPasswordLink?: string;
   ForgotPassword?: string
@@ -18,7 +18,7 @@ const CardWrapper = ({
       <CardContent>{children}</CardContent>
       <CardFooter className="flex px-0justify-between">
       <Button variant={"link"}>
-        <Link href={Opplink}>{label}</Link>
+        {Opplink && <Link href={Opplink}>{label}</Link>}
       </Button>
       </CardFooter>
     </Card>

@@ -37,7 +37,6 @@ export const TwoFAVerify = ({ onVerifySuccess, onResetSuccess }: any) => {
 
   // Put reset 2fa somewhere
   const handleTokenVerification = async() => {
-   
     try {
       const { data } = await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/verify`, { withCredentials: true });
       setSuccess(data.message);
@@ -47,11 +46,19 @@ export const TwoFAVerify = ({ onVerifySuccess, onResetSuccess }: any) => {
     }
   }
 
+  // http://localhost:7000/api/2fa/reset
+  const handleResetTOTP = async () => {
+    try {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/reset`, { withCredentials: true })
+      setSuccess(data.message);
+    } catch (error: any) {
+      setError(error.response.data.message)
+    }
+  }
+
   return <div>
     <div className="flex justify-center items-center h-full">
       <CardWrapper
-        label="Don't have an account? Register"
-        Opplink="/register"
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -77,6 +84,9 @@ export const TwoFAVerify = ({ onVerifySuccess, onResetSuccess }: any) => {
                <FormError message={error} />
                 <FormSuccess message={success} />
                <Button type="submit" className="cursor-pointer">Submit</Button>
+               <div>
+                <Button onClick={handleResetTOTP}> Reset TOTP</Button>
+               </div>
             </div>
           </form>
         </Form>
