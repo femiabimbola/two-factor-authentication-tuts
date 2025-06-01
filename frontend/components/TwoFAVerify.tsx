@@ -21,7 +21,7 @@ const LoginSchema = z.object({
   password: z.string().min(1, { message: "Password is required" }),
 });
 
-export const TwoFAVerify = ({ onVerifySuccess, onResetSuccess }: any) => {
+export const TwoFAVerify = () => {
 
   const form = useForm<z.infer<typeof LoginSchema>>({
       resolver: zodResolver(LoginSchema),
@@ -56,10 +56,9 @@ export const TwoFAVerify = ({ onVerifySuccess, onResetSuccess }: any) => {
     }
   }
 
-  return <div>
-    <div className="flex justify-center items-center h-full">
-      <CardWrapper
-      >
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <CardWrapper>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className=" flex flex-col gap-y-5">
@@ -85,12 +84,12 @@ export const TwoFAVerify = ({ onVerifySuccess, onResetSuccess }: any) => {
                 <FormSuccess message={success} />
                <Button type="submit" className="cursor-pointer">Submit</Button>
                <div>
-                <Button onClick={handleResetTOTP}> Reset TOTP</Button>
                </div>
             </div>
           </form>
         </Form>
+        <Button onClick={handleResetTOTP} className="cursor-pointer"> Reset TOTP</Button>
       </CardWrapper>
     </div>
-  </div>
+    )
 }
