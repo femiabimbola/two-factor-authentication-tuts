@@ -11,7 +11,6 @@ const Verify2Fa = () => {
   };
 
   const handle2faReset = () => {
-
   }
 
   return (

@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
 
   // Check for authentication (e.g., session cookie or token)
     const sessionToken = request.cookies.get('token')?.value
-    console.log(sessionToken)
+    // console.log(sessionToken)
 
   // If no session token, redirect to login page
   if (!sessionToken) {
@@ -28,13 +28,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-    // If user is authenticated and trying to access login or signup, redirect to dashboard
-    if (sessionToken && (pathname === '/login' || pathname === '/signup')) {
+    // If user is authenticated and trying to access login or register, redirect to dashboard
+    if (sessionToken && (pathname === '/login' || pathname === '/register')) {
+      console.log("The pathname is called" + pathname)
       const dashboardUrl = new URL('/dashboard', request.url);
       return NextResponse.redirect(dashboardUrl);
     }
-
-
 
 }
 
