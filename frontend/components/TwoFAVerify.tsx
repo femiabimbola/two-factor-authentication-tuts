@@ -88,7 +88,9 @@ export const TwoFAVerify = () => {
             </div>
           </form>
         </Form>
-        <Button onClick={handleResetTOTP} className="cursor-pointer"> Reset TOTP</Button>
+        <Button onClick={handleResetTOTP} className="cursor-pointer"> 
+          Reset TOTP
+        </Button>
       </CardWrapper>
     </div>
     )
