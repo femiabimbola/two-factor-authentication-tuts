@@ -7,6 +7,12 @@ frontend/node_modules
 frontend/next-env.d.ts
 frontend/package-lock.json
 
+
+client/package-lock.json
+client/.next/
+client/out/
+
+
 # next.js
 frontend/.next/
 frontend/out/

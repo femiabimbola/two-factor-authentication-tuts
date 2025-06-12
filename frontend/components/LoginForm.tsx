@@ -45,8 +45,9 @@ export const LoginForm = ({onLoginSuccess}: any) => {
     startTransition( async() => {
       try {
         const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, values, {withCredentials:true})
+        console.log(data)
         setSuccess(data.message);
-        onLoginSuccess(data)
+        // onLoginSuccess(data)
       } catch (error:any) {
         setError(error.response.data.message)
       }
@@ -75,6 +76,7 @@ export const LoginForm = ({onLoginSuccess}: any) => {
                           {...field}
                           placeholder="Enter your email"
                           type="email"
+                          disabled={isPending}
                         />
                       </FormControl>
                       <FormMessage />
@@ -92,6 +94,7 @@ export const LoginForm = ({onLoginSuccess}: any) => {
                           {...field}
                           placeholder="Enter your email"
                           type="password"
+                          disabled={isPending}
                         />
                       </FormControl>
                       <FormMessage />
