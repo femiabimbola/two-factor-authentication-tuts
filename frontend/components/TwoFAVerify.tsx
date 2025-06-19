@@ -11,8 +11,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { FormError, FormSuccess } from "./FormMessage";
+
 
 const LoginSchema = z.object({
   email: z
@@ -34,6 +36,7 @@ export const TwoFAVerify = () => {
 
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const router = useRouter();
 
   // Put reset 2fa somewhere
   const handleTokenVerification = async() => {
@@ -51,6 +54,7 @@ export const TwoFAVerify = () => {
     try {
       const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/reset`, { withCredentials: true })
       setSuccess(data.message);
+      router.push("/setup2fa")
     } catch (error: any) {
       setError(error.response.data.message)
     }

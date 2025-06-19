@@ -98,15 +98,17 @@ export const setup2FA = async (req: Request, res: Response): Promise<any> => {
   try {
     const user = req.user; // Access the user from req
     if (!user) return res.status(400).json({ message: "Please sign in" });
-    const secret = speakeasy.generateSecret();
-    // console.log(secret.base32)
 
+    const secret = speakeasy.generateSecret();
+
+    // Find the user
     const dbUser = await User.findById(user._id)
 
     if(!dbUser) return res.status(400).json({ message: "User not found" });
 
     dbUser.userPreferences.twoFactorSecret = secret.base32;
 
+    // To save the secret modified in the database
     dbUser.markModified("userPreferences");
 
     try {
@@ -162,7 +164,6 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
 
   
     if (!verified){
-      // console.log("Server time:", new Date().toISOString());
       return res.status(500).json({ message: "2fa could not be verified" });
     } 
 
