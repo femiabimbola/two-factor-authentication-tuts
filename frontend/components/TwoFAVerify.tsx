@@ -16,21 +16,18 @@ import axios from "axios";
 import { FormError, FormSuccess } from "./FormMessage";
 
 
-const LoginSchema = z.object({
-  email: z
-    .string({ invalid_type_error: "Must be a string" })
-    .email({ message: "Valid email is required" }),
-  password: z.string().min(1, { message: "Password is required" }),
+const verifySchema = z.object({
+  input: z.string().min(1, { message: "Password is required" }),
 });
 
 export const TwoFAVerify = () => {
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-      resolver: zodResolver(LoginSchema),
-      defaultValues: { email: "", password: "" },
+  const form = useForm<z.infer<typeof verifySchema>>({
+      resolver: zodResolver(verifySchema),
+      defaultValues: { input: "" },
     });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof verifySchema>) => {
     handleTokenVerification()
   }
 
@@ -69,7 +66,7 @@ export const TwoFAVerify = () => {
               <h1 className="text-2xl font-bold tracking-tight text-gray-900 text-center"> Verify TOTP</h1>
               <FormField
                   control={form.control}
-                  name="email"
+                  name="input"
                   render={({field}) => (
                     <FormItem>
                       <FormLabel>TOTP</FormLabel>
