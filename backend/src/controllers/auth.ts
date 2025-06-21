@@ -145,8 +145,9 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
     if (!dbUser || !dbUser.userPreferences?.twoFactorSecret) {
       return res.status(400).json({ success: false, message: "2FA not set up for this user" });
     }
-
-    const { token } = req.body; // this is where there is error
+    console.log(req.body)
+    const { token } = req.body; // this is where the error is
+    console.log(token)
     if(!token) return res.status(400).json({ message: "Token is not available" })
     
 

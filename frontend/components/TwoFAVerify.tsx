@@ -28,17 +28,16 @@ export const TwoFAVerify = () => {
     });
 
   const onSubmit = (values: z.infer<typeof verifySchema>) => {
-    handleTokenVerification()
+    handleTokenVerification(values)
   }
 
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const router = useRouter();
 
-  // Put reset 2fa somewhere
-  const handleTokenVerification = async() => {
+  const handleTokenVerification = async(values: z.infer<typeof verifySchema>) => {
     try {
-      const { data } = await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/verify`, { withCredentials: true });
+      const { data } = await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/verify`, values, { withCredentials: true });
       setSuccess(data.message);
 
     } catch (error:any) {
