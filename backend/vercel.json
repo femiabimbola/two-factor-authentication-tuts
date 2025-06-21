@@ -1,5 +1,15 @@
 {
   "version": 2,
-  "builds": [{"src":"src/index.ts", "use": "@vercel/node"}],
-  "routes": [{"src":"/src/", "dest": "src/index.ts"}]
+  "builds": [{"src":"dist/src/index.js", "use": "@vercel/node"}],
+  "routes": [
+    {
+      "src":"/dist(.*)",
+      "dest": "index.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+      }
+    }
+  ]
 }
