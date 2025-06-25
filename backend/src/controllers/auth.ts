@@ -142,6 +142,7 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
     if (!user) return res.status(400).json({ message: "User not available" });
     
     const dbUser = await User.findById(user._id);
+
     if (!dbUser || !dbUser.userPreferences?.twoFactorSecret) {
       return res.status(400).json({ success: false, message: "2FA not set up for this user" });
     }
@@ -182,7 +183,7 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
 
     return res.status(200).json({ message: "2fa successuly", data: jwtToken });
   } catch (error) {
-    return res.status(500).json({ message: "2fa was notsuccessuly" });
+    return res.status(500).json({ message: "2fa was not successuly" });
   }
 };
 

@@ -10,7 +10,6 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) :
     }
     try {
         const decodedToken: any = jwt.verify(token, process.env.TOKEN_SECRET!)
-        // const user = await User.findOne({ id: decodedToken._id }).select('-password');
         const user = await User.findOne({ email: decodedToken.email}).select('-password')
         if (!user) {
             return res.status(404).json({ message: "Please sign in 2" });

@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export const TwoFASetup = ({ onSetupComplete }: any) => {
+  
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
 
@@ -36,8 +37,7 @@ export const TwoFASetup = ({ onSetupComplete }: any) => {
 
   const fetchQRcode = async () => {
     const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`,
-      { withCredentials: true }
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/2fa/setup`, { withCredentials: true }
     );
     setResponse(data.data);
   };
@@ -64,6 +64,7 @@ export const TwoFASetup = ({ onSetupComplete }: any) => {
               <h1 className="text-xl font-bold tracking-tight text-gray-900 text-center">
                 Activate Two Factor Authentication
               </h1>
+              <p>Hi, </p>
               <div className="mx-auto">
                 {response && <h3> Scan with your authenticator application </h3>}
                 {response && (
