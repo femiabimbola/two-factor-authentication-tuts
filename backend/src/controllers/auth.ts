@@ -146,9 +146,9 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
     if (!dbUser || !dbUser.userPreferences?.twoFactorSecret) {
       return res.status(400).json({ success: false, message: "2FA not set up for this user" });
     }
-    console.log(req.body)
-    const { token } = req.body; // this is where the error is
-    console.log(token)
+    // console.log("The req body",req.body)
+    const  token  = req.body.otp; // this is where the error is
+   
     if(!token) return res.status(400).json({ message: "Token is not available" })
     
 
@@ -170,18 +170,20 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
     } 
 
 
-    const jwtToken = jwt.sign(
-      { email: user.email },
-      process.env.TOKEN_SECRET!,
-      { expiresIn: 36000 }
-    );
+    // const jwtToken = jwt.sign(
+    //   { email: user.email },
+    //   process.env.TOKEN_SECRET!,
+    //   { expiresIn: 36000 }
+    // );
 
     
     dbUser.userPreferences.enable2FA = true;
    
     dbUser.markModified("userPreferences");//very importANT
 
-    return res.status(200).json({ message: "2fa successuly", data: jwtToken });
+    await dbUser.save()
+    
+    return res.status(200).json({ message: "2fa successuly", });
   } catch (error) {
     return res.status(500).json({ message: "2fa was not successuly" });
   }
