@@ -151,11 +151,9 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
    
     if(!token) return res.status(400).json({ message: "Token is not available" })
     
-
     if(!/^\d{6,8}$/.test(token)) {
       return res.status(400).json({ success: false, message: "Invalid token format" });
     }
-
 
     const verified = speakeasy.totp.verify({
       secret: dbUser.userPreferences.twoFactorSecret,
@@ -169,17 +167,9 @@ export const verify2FA = async (req: Request, res: Response): Promise<any> => {
       return res.status(500).json({ message: "2fa could not be verified" });
     } 
 
-
-    // const jwtToken = jwt.sign(
-    //   { email: user.email },
-    //   process.env.TOKEN_SECRET!,
-    //   { expiresIn: 36000 }
-    // );
-
-    
     dbUser.userPreferences.enable2FA = true;
-   
-    dbUser.markModified("userPreferences");//very importANT
+
+    dbUser.markModified("userPreferences");
 
     await dbUser.save()
     
